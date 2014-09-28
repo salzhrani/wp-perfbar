@@ -1,0 +1,2 @@
+	perfBar.init({});
+
