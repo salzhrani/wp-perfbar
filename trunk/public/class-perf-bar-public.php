@@ -74,11 +74,29 @@ class Perf_Bar_Public {
 		 * class.
 		 */
 		$options = get_option( 'my_option_name' );
+
 		$show_all = $options['show_all'];
+
 		if ($show_all === 'on' || is_user_logged_in()) {
-			error_log($show_all === 'on');
+
 			wp_enqueue_script( $this->name, plugin_dir_url( __FILE__ ) . 'js/perfbar.js', '', $this->version, true );
-			wp_enqueue_script( $this->name . '-boot', plugin_dir_url( __FILE__ ) . 'js/perf-bar-boot.js', '', $this->version, true );
+
+			wp_register_script ( $this->name . '-boot', plugin_dir_url( __FILE__ ) . 'js/perf-bar-boot.js', '', $this->version, true);
+
+			$defaults = array('loadTime' => 5000, 'latency' => 50, 'frontEnd' => '', 'backEnd' => '');
+
+			$options = get_option( 'perf_bar_settings' );
+
+			foreach ($defaults as $key => $value) {
+				if (!isset($options['budget'][$key])) {
+					$options['budget'][$key] = $value;
+				}
+			}
+
+			wp_localize_script( $this->name . '-boot' , 'budgets', $options['budget']);
+
+			wp_enqueue_script( $this->name . '-boot' );
+
 		}
 
 	}

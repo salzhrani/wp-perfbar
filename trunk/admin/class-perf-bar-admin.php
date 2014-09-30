@@ -63,10 +63,11 @@ class Perf_Bar_Admin {
 		
 		register_setting(
             'my_option_group', // Option group
-            'my_option_name', // Option name
+            'perf_bar_settings', // Option name
             array( $this, 'sanitize' ) // Sanitize
         );
 
+		// privacy section
         add_settings_section(
             'visibility-section', // ID
             'Bar Visibility', // Title
@@ -80,13 +81,69 @@ class Perf_Bar_Admin {
             array( $this, 'private_callback' ), // Callback
             'perf-bar-settings', // Page
             'visibility-section' // Section           
-        );       
+        );
+
+        // budget section
+        add_settings_section(
+            'budget-section', // ID
+            'Performance Budget', // Title
+            array( $this, 'print_budget_info' ), // Callback
+            'perf-bar-settings' // Page
+        ); 
+
+        add_settings_field(
+            'loadTime', // ID
+            'Load time', // Title 
+            array( $this, 'loadTime_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'latency', // ID
+            'Latency', // Title 
+            array( $this, 'latency_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'frontEnd', // ID
+            'Front End', // Title 
+            array( $this, 'frontEnd_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+		
+		add_settings_field(
+            'frontEnd', // ID
+            'Front End', // Title 
+            array( $this, 'frontEnd_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'backEnd', // ID
+            'Back End', // Title 
+            array( $this, 'backEnd_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
 
 	}
 
 	public function options_page () {
 
-		$this->options = get_option( 'my_option_name' );
+		$defaults = array('loadTime' => 5000, 'latency' => 50, 'frontEnd' => '', 'backEnd' => '');
+
+		$this->options = get_option( 'perf_bar_settings' );
+
+		foreach ($defaults as $key => $value) {
+			if (!isset($this->options['budget'][$key])) {
+				$this->options['budget'][$key] = $value;
+			}
+		}
 
 		?> 
 		<div class="wrap">
@@ -104,14 +161,51 @@ class Perf_Bar_Admin {
 	}
 
 	public function private_callback() {
-            echo '<input type="checkbox" id="show_all" name="my_option_name[show_all]" ' . (isset( $this->options['show_all'] ) ? 'checked' : '') . ' />';
+		echo '<input type="checkbox" id="show_all" name="perf_bar_settings[show_all]" ' . (isset( $this->options['show_all'] ) ? 'checked' : '') . ' />';
     }
 
     public function print_section_info() {
     	echo 'How do you want the bar to show';
     }
+	
+	public function print_budget_info() {
+    	echo 'Adjust the performance budget';
+    }
+    public function loadTime_callback () {
+    	echo '<input type="text" id="loadTime" name="perf_bar_settings[budget][loadTime]" value="' . $this->options['budget']['loadTime'] . '" /> ms';
+    }
+
+	public function latency_callback () {
+		echo '<input type="text" id="latency" name="perf_bar_settings[budget][latency]" value="' . $this->options['budget']['latency'] . '" /> ms';
+	}
+
+	public function frontEnd_callback () {
+		echo '<input type="text" id="frontEnd" name="perf_bar_settings[budget][frontEnd]" value="' . $this->options['budget']['frontEnd'] . '" /> ms';
+	}
+
+	public function backEnd_callback () {
+		echo '<input type="text" id="backEnd" name="perf_bar_settings[budget][backEnd]" value="' . $this->options['budget']['backEnd'] . '" /> ms';
+	}
+
 
     public function sanitize( $input ) {
-    	return $input;
+    	$rval = array('show_all' => $input['show_all']);
+    	
+    	if (isset($input['budget']['loadTime'])) {
+    		$rval['budget']['loadTime'] = absint($input['budget']['loadTime']);
+    	}
+
+    	if (isset($input['budget']['latency'])) {
+    		$rval['budget']['latency'] = absint($input['budget']['latency']);
+    	}
+    	
+    	if (isset($input['budget']['frontEnd'])) {
+    		$rval['budget']['frontEnd'] = absint($input['budget']['frontEnd']);
+    	}
+
+    	if (isset($input['budget']['backEnd'])) {
+    		$rval['budget']['backEnd'] = absint($input['budget']['backEnd']);
+    	}
+    	return $rval;
     }
 }
