@@ -131,11 +131,142 @@ class Perf_Bar_Admin {
             'budget-section' // Section           
         );
 
+        add_settings_field(
+            'respnseDuration', // ID
+            'Response Duration', // Title 
+            array( $this, 'respnseDuration_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'requestDuration', // ID
+            'Request Duration', // Title 
+            array( $this, 'requestDuration_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'redirectCount', // ID
+            'Redirects', // Title 
+            array( $this, 'redirectCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'loadEventTime', // ID
+            'Load Event duration', // Title 
+            array( $this, 'loadEventTime_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'domContentLoaded', // ID
+            'DOM Content loaded', // Title 
+            array( $this, 'domContentLoaded_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'processing', // ID
+            'Processing Duration', // Title 
+            array( $this, 'processing_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'numOfEl', // ID
+            'DOM elements', // Title 
+            array( $this, 'numOfEl_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'cssCount', // ID
+            'CSS', // Title 
+            array( $this, 'cssCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'jsCount', // ID
+            'JavaScript', // Title 
+            array( $this, 'jsCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'imgCount', // ID
+            'Images', // Title 
+            array( $this, 'imgCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'dataURIImagesCount', // ID
+            'Data URI images', // Title 
+            array( $this, 'dataURIImagesCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'inlineCSSCount', // ID
+            'Inline CSS', // Title 
+            array( $this, 'inlineCSSCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'inlineJSCount', // ID
+            'Inline JavaScript', // Title 
+            array( $this, 'inlineJSCount_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'thirdCSS', // ID
+            '3rd Party CSS', // Title 
+            array( $this, 'thirdCSS_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'thirdJS', // ID
+            '3rd Party JavaScript', // Title 
+            array( $this, 'thirdJS_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
+
+        add_settings_field(
+            'globalJS', // ID
+            'JavaScript Globals', // Title 
+            array( $this, 'globalJS_callback' ), // Callback
+            'perf-bar-settings', // Page
+            'budget-section' // Section           
+        );
 	}
 
 	public function options_page () {
 
-		$defaults = array('loadTime' => 5000, 'latency' => 50, 'frontEnd' => '', 'backEnd' => '');
+		$defaults = array(
+                        'loadTime' => array('max' => 5000, 'min' => '', 'disable' => false), 
+                        'latency' => array('max' => 50, 'min' => '', 'disable' => false), 
+                        'frontEnd' => array('max' => '', 'min' => '', 'disable' => false), 
+                        'backEnd' => array('max' => '', 'min' => '', 'disable' => false));
 
 		$this->options = get_option( 'perf_bar_settings' );
 
@@ -149,8 +280,10 @@ class Perf_Bar_Admin {
 		<div class="wrap">
 			<h2>PerfBar Settings</h2>
 			<form method="post" action="options.php">
+                
 				<?php 
-				settings_fields( 'my_option_group' );   
+				settings_fields( 'my_option_group' ); 
+                echo 'here';
                 do_settings_sections( 'perf-bar-settings' );
                 submit_button(); 
                 ?>
@@ -171,41 +304,141 @@ class Perf_Bar_Admin {
 	public function print_budget_info() {
     	echo 'Adjust the performance budget';
     }
+
     public function loadTime_callback () {
-    	echo '<input type="text" id="loadTime" name="perf_bar_settings[budget][loadTime]" value="' . $this->options['budget']['loadTime'] . '" /> ms';
+    	echo 'Min: <input type="text" id="loadTime" name="perf_bar_settings[budget][loadTime][min]" value="' . $this->options['budget']['loadTime']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][loadTime][max]" value="' . $this->options['budget']['loadTime']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" value="true" name="perf_bar_settings[budget][loadTime][disable]" value="true" ' . ($this->options['budget']['loadTime']['disable'] ? 'checked' : '') . '>';
     }
 
 	public function latency_callback () {
-		echo '<input type="text" id="latency" name="perf_bar_settings[budget][latency]" value="' . $this->options['budget']['latency'] . '" /> ms';
+        echo 'Min: <input type="text" id="latency" name="perf_bar_settings[budget][latency][min]" value="' . $this->options['budget']['latency']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][latency][max]" value="' . $this->options['budget']['latency']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][latency][disable]" value="true" ' . ($this->options['budget']['latency']['disable'] ? 'checked' : '') . '>';
 	}
 
 	public function frontEnd_callback () {
-		echo '<input type="text" id="frontEnd" name="perf_bar_settings[budget][frontEnd]" value="' . $this->options['budget']['frontEnd'] . '" /> ms';
+		echo 'Min: <input type="text" id="frontEnd" name="perf_bar_settings[budget][frontEnd][min]" value="' . $this->options['budget']['frontEnd']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][frontEnd][max]" value="' . $this->options['budget']['frontEnd']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][frontEnd][disable]" value="true" ' . ($this->options['budget']['frontEnd']['disable'] ? 'checked' : '') . '>';
 	}
 
 	public function backEnd_callback () {
-		echo '<input type="text" id="backEnd" name="perf_bar_settings[budget][backEnd]" value="' . $this->options['budget']['backEnd'] . '" /> ms';
+		echo 'Min: <input type="text" id="backEnd" name="perf_bar_settings[budget][backEnd][min]" value="' . $this->options['budget']['backEnd']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][backEnd][max]" value="' . $this->options['budget']['backEnd']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][backEnd][disable]" value="true" ' . ($this->options['budget']['backEnd']['disable'] ? 'checked' : '') . '>';
 	}
 
+    public function respnseDuration_callback () {
+        echo 'Min: <input type="text" id="respnseDuration" name="perf_bar_settings[budget][respnseDuration][min]" value="' . $this->options['budget']['respnseDuration']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][respnseDuration][max]" value="' . $this->options['budget']['respnseDuration']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][respnseDuration][disable]" value="true" ' . ($this->options['budget']['respnseDuration']['disable'] ? 'checked' : '') . '>';
+    }
 
+    public function requestDuration_callback () {
+        echo 'Min: <input type="text" id="requestDuration" name="perf_bar_settings[budget][requestDuration][min]" value="' . $this->options['budget']['requestDuration']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][requestDuration][max]" value="' . $this->options['budget']['requestDuration']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][requestDuration][disable]" value="true" ' . ($this->options['budget']['requestDuration']['disable'] ? 'checked' : '') . '>';
+    }
+
+    public function redirectCount_callback () {
+        echo 'Min: <input type="text" id="redirectCount" name="perf_bar_settings[budget][redirectCount][min]" value="' . $this->options['budget']['redirectCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][redirectCount][max]" value="' . $this->options['budget']['redirectCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][redirectCount][disable]" value="true" ' . ($this->options['budget']['redirectCount']['disable'] ? 'checked' : '') . '>';
+    }
+
+    public function loadEventTime_callback () {
+        echo 'Min: <input type="text" id="loadEventTime" name="perf_bar_settings[budget][loadEventTime][min]" value="' . $this->options['budget']['loadEventTime']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][loadEventTime][max]" value="' . $this->options['budget']['loadEventTime']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][loadEventTime][disable]" value="true" ' . ($this->options['budget']['loadEventTime']['disable'] ? 'checked' : '') . '>';
+    }
+
+    public function domContentLoaded_callback () {
+        echo 'Min: <input type="text" id="domContentLoaded" name="perf_bar_settings[budget][domContentLoaded][min]" value="' . $this->options['budget']['domContentLoaded']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][domContentLoaded][max]" value="' . $this->options['budget']['domContentLoaded']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][domContentLoaded][disable]" value="true" ' . ($this->options['budget']['domContentLoaded']['disable'] ? 'checked' : '') . '>';
+    }
+
+    public function processing_callback () {
+        echo 'Min: <input type="text" id="processing" name="perf_bar_settings[budget][processing][min]" value="' . $this->options['budget']['processing']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][processing][max]" value="' . $this->options['budget']['processing']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][processing][disable]" value="true" ' . ($this->options['budget']['processing']['disable'] ? 'checked' : '') . '>';
+    }
+
+    public function numOfEl_callback () {
+        echo 'Min: <input type="text" id="numOfEl" name="perf_bar_settings[budget][numOfEl][min]" value="' . $this->options['budget']['numOfEl']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][numOfEl][max]" value="' . $this->options['budget']['numOfEl']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][numOfEl][disable]" value="true" ' . ($this->options['budget']['numOfEl']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function cssCount_callback () {
+        echo 'Min: <input type="text" id="cssCount" name="perf_bar_settings[budget][cssCount][min]" value="' . $this->options['budget']['cssCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][cssCount][max]" value="' . $this->options['budget']['cssCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][cssCount][disable]" value="true" ' . ($this->options['budget']['cssCount']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function jsCount_callback () {
+        echo 'Min: <input type="text" id="jsCount" name="perf_bar_settings[budget][jsCount][min]" value="' . $this->options['budget']['jsCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][jsCount][max]" value="' . $this->options['budget']['jsCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][jsCount][disable]" value="true" ' . ($this->options['budget']['jsCount']['disable'] ? 'checked' : '') . '>';
+    }
+
+    public function imgCount_callback () {
+        echo 'Min: <input type="text" id="imgCount" name="perf_bar_settings[budget][imgCount][min]" value="' . $this->options['budget']['imgCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][imgCount][max]" value="' . $this->options['budget']['imgCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][imgCount][disable]" value="true" ' . ($this->options['budget']['imgCount']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function dataURIImagesCount_callback () {
+        echo 'Min: <input type="text" id="dataURIImagesCount" name="perf_bar_settings[budget][dataURIImagesCount][min]" value="' . $this->options['budget']['dataURIImagesCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][dataURIImagesCount][max]" value="' . $this->options['budget']['dataURIImagesCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][dataURIImagesCount][disable]" value="true" ' . ($this->options['budget']['dataURIImagesCount']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function inlineCSSCount_callback () {
+        echo 'Min: <input type="text" id="inlineCSSCount" name="perf_bar_settings[budget][inlineCSSCount][min]" value="' . $this->options['budget']['inlineCSSCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][inlineCSSCount][max]" value="' . $this->options['budget']['inlineCSSCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][inlineCSSCount][disable]" value="true" ' . ($this->options['budget']['inlineCSSCount']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function inlineJSCount_callback () {
+        echo 'Min: <input type="text" id="inlineJSCount" name="perf_bar_settings[budget][inlineJSCount][min]" value="' . $this->options['budget']['inlineJSCount']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][inlineJSCount][max]" value="' . $this->options['budget']['inlineJSCount']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][inlineJSCount][disable]" value="true" ' . ($this->options['budget']['inlineJSCount']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function thirdCSS_callback () {
+        echo 'Min: <input type="text" id="thirdCSS" name="perf_bar_settings[budget][thirdCSS][min]" value="' . $this->options['budget']['thirdCSS']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][thirdCSS][max]" value="' . $this->options['budget']['thirdCSS']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][thirdCSS][disable]" value="true" ' . ($this->options['budget']['thirdCSS']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function thirdJS_callback () {
+        echo 'Min: <input type="text" id="thirdJS" name="perf_bar_settings[budget][thirdJS][min]" value="' . $this->options['budget']['thirdJS']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][thirdJS][max]" value="' . $this->options['budget']['thirdJS']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][thirdJS][disable]" value="true" ' . ($this->options['budget']['thirdJS']['disable'] ? 'checked' : '') . '>';
+    }
+    
+    public function globalJS_callback () {
+        echo 'Min: <input type="text" id="globalJS" name="perf_bar_settings[budget][globalJS][min]" value="' . $this->options['budget']['globalJS']['min'] . '" size="5" /></td>';
+        echo '<td>Max: <input type="text" name="perf_bar_settings[budget][globalJS][max]" value="' . $this->options['budget']['globalJS']['max'] . '" size="5"></td>';
+        echo '<td>Disable: <input type="checkbox" name="perf_bar_settings[budget][globalJS][disable]" ' . ($this->options['budget']['globalJS']['disable'] ? 'checked' : '') . '>';
+    }
+    
     public function sanitize( $input ) {
     	$rval = array('show_all' => $input['show_all']);
     	
-    	if (isset($input['budget']['loadTime'])) {
-    		$rval['budget']['loadTime'] = absint($input['budget']['loadTime']);
-    	}
-
-    	if (isset($input['budget']['latency'])) {
-    		$rval['budget']['latency'] = absint($input['budget']['latency']);
-    	}
-    	
-    	if (isset($input['budget']['frontEnd'])) {
-    		$rval['budget']['frontEnd'] = absint($input['budget']['frontEnd']);
-    	}
-
-    	if (isset($input['budget']['backEnd'])) {
-    		$rval['budget']['backEnd'] = absint($input['budget']['backEnd']);
-    	}
+        foreach ($input['budget'] as $key => $value) {
+            if (isset($input['budget'][$key]['min']) && !empty($input['budget'][$key]['min'])) {
+                $rval['budget'][$key]['min'] = $input['budget'][$key]['min'];
+            }
+            if (isset($input['budget'][$key]['max']) && !empty($input['budget'][$key]['max'])) {
+                $rval['budget'][$key]['max'] = $input['budget'][$key]['max'];
+            }
+            if (isset($input['budget'][$key]['disable'])) {
+                $rval['budget'][$key]['disable'] = $input['budget'][$key]['disable'];
+            }
+        }
     	return $rval;
     }
 }
