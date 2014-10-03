@@ -17,7 +17,7 @@
  * Plugin URI:        http://lafikl.github.io/perfBar
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress dashboard.
  * Version:           1.0.0
- * Author:            Your Name or Your Company
+ * Author:            Khalid Lafi
  * Author URI:        http://lafikl.github.io/perfBar
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
