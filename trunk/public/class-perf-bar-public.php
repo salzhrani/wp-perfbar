@@ -73,8 +73,9 @@ class Perf_Bar_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		$options = get_option( 'my_option_name' );
-
+		$options = get_option( 'perf_bar_settings' );
+		error_log('options');
+		error_log(json_encode($options));
 		$show_all = $options['show_all'];
 
 		if ($show_all === 'on' || is_user_logged_in()) {
@@ -84,8 +85,6 @@ class Perf_Bar_Public {
 			wp_register_script ( $this->name . '-boot', plugin_dir_url( __FILE__ ) . 'js/perf-bar-boot.js', '', $this->version, true);
 
 			$defaults = array('loadTime' => 5000, 'latency' => 50, 'frontEnd' => '', 'backEnd' => '');
-
-			$options = get_option( 'perf_bar_settings' );
 
 			foreach ($defaults as $key => $value) {
 				if (!isset($options['budget'][$key])) {

@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              http://lafikl.github.io/perfBar/
- * @since             1.0.0
+ * @since             1.0.1
  * @package           PerfBar
  *
  * @wordpress-plugin
  * Plugin Name:       PerfBar
  * Plugin URI:        http://lafikl.github.io/perfBar
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress dashboard.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Khalid Lafi
  * Author URI:        http://lafikl.github.io/perfBar
  * License:           GPL-2.0+
@@ -50,3 +50,4 @@ function run_Perf_Bar() {
 
 }
 run_Perf_Bar();
+?>
